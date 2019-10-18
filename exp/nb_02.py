@@ -4,7 +4,20 @@
 #################################################
 # file to edit: dev_nb/02_callbacks.ipynb
 
+from exp.nb_01 import *
+
+class DataBunch():
+    def __init__(self, train_dl, valid_dl, c=None):
+        self.train_dl, self.valid_dl, self.c = train_dl, valid_dl, c
+
+    @property
+    def train_ds(self): return self.train_dl.dataset
+
+    @property
+    def valid_ds(self): return self.valid_dl.dataset
+
 from torch import optim
+from torch import nn
 
 def get_model(data, lr=0.5, nh=50):
     model=nn.Sequential(nn.Linear(data.train_ds.x.shape[1],nh), nn.ReLU(), nn.Linear(nh, 10))
