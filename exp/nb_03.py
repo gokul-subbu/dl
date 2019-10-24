@@ -56,7 +56,7 @@ torch.Tensor.ndim = property(lambda x: len(x.shape))
 def plot_themes():
     from jupyterthemes import jtplot
     jtplot.style(theme='onedork')
-    jtplot.style(context='talk', fscale=1.4, spines=False, gridlines='- ')
+    jtplot.style(context='talk', fscale=1.4, spines=False, gridlines='-.')
 
 def combine_scheds(pcts, scheds):
     assert sum(pcts) == 1., 'the interval must sum to 1'
