@@ -3,3 +3,5 @@ data/cifar_10.tar.gz
 data/mnist.pkl.gz
 *.png
 data/cifar.tgz
+*.tgz
+*.JPEG
