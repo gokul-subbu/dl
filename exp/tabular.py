@@ -21,7 +21,7 @@ def plot_cols(df, *cols):
     lines, labels=ax.get_legend_handles_labels()
     ax.legend(lines, labels, loc='best')
 
- 
+
 def col_trans(df, feat_mean, feat_median):
     mean_imputer=Pipeline(steps=[('imputer',SimpleImputer(strategy='mean'))])
     median_imputer=Pipeline(steps=[('imputer',SimpleImputer(strategy='median'))])
