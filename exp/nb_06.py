@@ -4,11 +4,6 @@
 #################################################
 # file to edit: dev_nb/06_learner.ipynb
 
-from exp.nb_05 import *
-import time
-from fastprogress import master_bar, progress_bar
-from fastprogress.fastprogress import format_time
-
 class ConvLayer(nn.Module):
     def __init__(self, ni, nf, ks=3, stride=2, sub=0., **kwargs):
         super().__init__()
