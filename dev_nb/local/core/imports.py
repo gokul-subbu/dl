@@ -21,7 +21,7 @@ from operator import itemgetter,attrgetter,methodcaller
 from urllib.request import urlopen
 
 # External modules
-import requests,yaml,matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy
+import requests,matplotlib.pyplot as plt,numpy as np,pandas as pd,scipy
 from pandas.api.types import is_categorical_dtype,is_numeric_dtype
 from numpy import array,ndarray
 from scipy import ndimage
