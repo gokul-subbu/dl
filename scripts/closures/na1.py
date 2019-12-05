@@ -1,0 +1,3 @@
+class clos:
+   pass
+
