@@ -1,0 +1,4 @@
+# XONSH WIZARD START
+source-foreign --interactive True --login False --envcmd torch pyshel "echo loading xonsh foreign shell"
+xontrib load apt_tabcomplete autojump autoxsh bashisms base16_shell jedi kitty mpl powerline prompt_ret_code prompt_vi_mode readable-traceback scrapy_tabcomplete ssh_agent xonda
+# XONSH WIZARD END
