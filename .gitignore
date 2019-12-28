@@ -6,3 +6,4 @@ data/cifar.tgz
 *.tgz
 *.JPEG
 data/acllmdb_v1.tar.gz
+data/aclImdb_v1.tar.gz
