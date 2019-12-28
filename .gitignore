@@ -5,3 +5,4 @@ data/mnist.pkl.gz
 data/cifar.tgz
 *.tgz
 *.JPEG
+data/acllmdb_v1.tar.gz
