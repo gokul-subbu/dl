@@ -7,7 +7,7 @@
 
 import operator
 from functools import partial
-from collections import deque
+from collections import deque, Counter
 from numpy import array, ndarray
 import pandas as pd
 from typing import Any, Collection, Callable, NewType, List, Union, TypeVar, Optional, Generator, Iterable
@@ -29,6 +29,14 @@ pd.options.display.max_colwidth = 600
 NoneType = type(None)
 string_classes = (str,bytes)
 
+#export
+def test_fail(f, msg='', contains=''):
+    "Fails with `msg` unless `f()` raises an exception and (optionally) has `contains` in `e.args`"
+    try: f()
+    except Exception as e:
+        assert not contains or contains in str(e)
+        return
+    assert False,f"Expected exception but none raised. {msg}"
 
 def all_equal(a,b):
     "Compares whether `a` and `b` are the same length and have the same contents"
@@ -46,6 +54,11 @@ def equals(a,b):
            all_equal      if is_iter(a) or is_iter(b) else
            operator.eq)
     return cmp(a,b)
+
+#export
+def nequals(a,b):
+    "Compares `a` and `b` for `not equals`"
+    return not equals(a,b)
 
 
 def test(a, b, cmp, cname=None):
