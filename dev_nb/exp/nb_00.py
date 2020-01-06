@@ -8,6 +8,30 @@ from fastcore.all import *
 from torch import nn, optim, tensor, Tensor
 from torch.utils.data import TensorDataset, Dataset, DataLoader
 
+import operator, torch
+from functools import partial
+from collections import deque
+from numpy import array, ndarray
+import pandas as pd
+from typing import Any, Collection, Callable, NewType, List, Union, TypeVar, Optional, Generator, Iterable
+import itertools
+from pandas.api.types import is_categorical_dtype,is_numeric_dtype
+from numpy import array,ndarray
+from scipy import ndimage
+from IPython.core.debugger import set_trace
+import numpy as np
+try:
+    from types import WrapperDescriptorType,MethodWrapperType,MethodDescriptorType
+except ImportError:
+    WrapperDescriptorType = type(object.__init__)
+    MethodWrapperType = type(object().__str__)
+    MethodDescriptorType = type(str.join)
+from types import BuiltinFunctionType,BuiltinMethodType,MethodType,FunctionType
+
+pd.options.display.max_colwidth = 600
+NoneType = type(None)
+string_classes = (str,bytes)
+
 data_path=Path(r'd:\git\dl\data')
 mnist_path=data_path.joinpath('mnist.pkl.gz')
 Path.ls=lambda x: L(x.iterdir())
