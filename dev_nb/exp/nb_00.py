@@ -7,8 +7,9 @@
 from fastcore.all import *
 from torch import nn, optim, tensor, Tensor
 from torch.utils.data import TensorDataset, Dataset, DataLoader
+import torch.nn.functional as F
 
-import operator, torch
+import operator, torch, gzip
 from functools import partial
 from collections import deque
 from numpy import array, ndarray
@@ -34,7 +35,7 @@ string_classes = (str,bytes)
 
 data_path=Path(r'd:\git\dl\data')
 mnist_path=data_path.joinpath('mnist.pkl.gz')
-Path.ls=lambda x: L(x.iterdir())
+#Path.ls=lambda x: L(x.iterdir())
 
 Rank0Tensor = NewType('OneEltTensor', Tensor)
 LossFunction = Callable[[Tensor, Tensor], Rank0Tensor]
