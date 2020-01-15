@@ -87,9 +87,9 @@ class Tabular:
     def ret_cat_codes(self):
         for i in self.cat_cols:
             self.df_train[i]=self.df_train[i].replace(self.cat_col_dict[i])
-            self.impute_na(self.df_train, i, -1)
+            self.impute_na(self.df_train, i, len(self.cat_col_dict[i])+1)
             self.df_val[i]=self.df_val[i].replace(self.cat_col_dict[i]) # dict(map(reversed, my_map.items()))
-            self.impute_na(self.df_val, i, -1)
+            self.impute_na(self.df_val, i, len(self.cat_col_dict[i])+1)
 
 def proc_df(df_tr:pd.DataFrame, df_va:pd.DataFrame, cat_cols:list, num_cols:list):
     data=Tabular(df_tr, df_va, cat_cols=cat_cols, num_cols=num_cols)
