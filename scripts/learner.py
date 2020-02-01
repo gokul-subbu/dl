@@ -23,5 +23,13 @@ class Learner():
     @property
     def metrics(self): return self._metrics
     
-    @pry
+    @metrics.setter
+    def metrics(self, v): self._metrics=L(v).map(mk_metric)
+
+    def add_cbs(self, cbs): L(cbs).map(self.add_cb)
+    def add_cb(self, cb):
+        old= getattr(self, cb.name, None)
+        assert not old or isinstance(old, type(cb))
+
+
 
