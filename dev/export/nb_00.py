@@ -10,7 +10,7 @@ from typing import *
 from pathlib import Path
 import re, itertools, sys, operator
 
-Path.ls =  lambda x: list(x.iterdir)
+Path.ls =  lambda x: list(x.iterdir())
 def test_op(x, y, op:Callable):
     return eq(x, y)
 
