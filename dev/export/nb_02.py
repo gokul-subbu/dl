@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-
+from sklearn import forest
 pd.pandas.set_option('display.max_columns', None)
 
 def files(path):
@@ -34,6 +34,8 @@ def add_datepart(df:pd.DataFrame, cols:list=None, just_date:bool=True,inplace:bo
     df.drop(columns=cols, inplace=True)
     return
 
+def set_rf_samples(n):
+    forest._generate_sample_indices=(lambda rs, n_samples: forest.check_random_state(rs).randint(0, n_samples, n))
 def split_val(df:pd.DataFrame, val_pct:float=0.3):
     'returns `df_train` and `df_valid`'
     shuf_idx=np.random.permutation(len(df))
