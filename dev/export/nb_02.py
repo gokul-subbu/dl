@@ -7,26 +7,30 @@
 from export.nb_01 import *
 import pandas as pd
 import numpy as np
+from pandas.api.types import is_string_dtype, is_numeric_dtype, is_categorical_dtype
 import matplotlib.pyplot as plt
 import os
-from sklearn import forest
+from collections import OrderedDict
+from typing import Tuple
+
 pd.pandas.set_option('display.max_columns', None)
 
-def files(path):
-    return [f.name for f in os.scandir(path)]
+Path.ls= lambda x: [i.name for i in os.scandir()]
 
-Path.ls= files
+def get_sample(df: pd.DataFrame, n:int)-> pd.DataFrame:
+    idxs= sorted(np.random.permutation(len(df))[:n])
+    return df.iloc[idxs].copy()
 
-def add_datepart(df:pd.DataFrame, cols:list=None, just_date:bool=True,inplace:bool=True)->pd.DataFrame:
+def add_datepart(df:pd.DataFrame, cols:list=None, time:bool=True,inplace:bool=True)->pd.DataFrame:
     '''parameters:
                 df: pd.DataFrame
                 cols: datetime cols
                 just date: bool specifying whether the object is it just date or date time
                 inplace: bool'''
     date_part=['year','month','day','week','dayofweek','weekday','quarter','is_month_start','is_month_end','is_year_end']
-    time_part=['time','hour','minute','second']
+    time_part=['hour','minute','second']
     for i in cols:
-        if not just_date:
+        if time:
             for j in time_part:
                 df[f'{i}_{j}']=getattr(df[i].dt,j)
         for j in date_part:
@@ -34,8 +38,6 @@ def add_datepart(df:pd.DataFrame, cols:list=None, just_date:bool=True,inplace:bo
     df.drop(columns=cols, inplace=True)
     return
 
-def set_rf_samples(n):
-    forest._generate_sample_indices=(lambda rs, n_samples: forest.check_random_state(rs).randint(0, n_samples, n))
 def split_val(df:pd.DataFrame, val_pct:float=0.3):
     'returns `df_train` and `df_valid`'
     shuf_idx=np.random.permutation(len(df))
@@ -46,70 +48,10 @@ def split_dep_col(df:pd.DataFrame, y:str):
     'returns `x` and `y`'
     return df.drop(columns=y), df.loc[:, y]
 
-def split_test_val(df:pd.DataFrame, y:str, val_pct:float=0.3):
+def train_test_split(df:pd.DataFrame, y:str=None, val_pct:float=0.3):
     ''' df 'pandas datadrame object `y` is the dependent column val_pct:=0.3'
     returns `x_train`, `y_train`, `x_valid`, `y_valid`'''
-    df_train, df_val= split_val(df, val_pct)
-    return split_dep_col(df_train, y), split_dep_col(df_val, y)
-
-def check_missing(df:pd.DataFrame, top:int=10):
-    return pd.DataFrame(df.isna().mean()).sort_values(by=0, ascending=False)[:top]
-
-class Tabular:
-    def __init__(self, df_train:pd.DataFrame, df_val:pd.DataFrame , cat_cols:list=[], num_cols:list=[]):
-        self.df_train=df_train.copy()
-        self.df_val=df_val.copy()
-        self.cat_cols=cat_cols
-        self.num_cols=num_cols
-        self.cat_col_dict={}
-        self.rev_cat={}
-
-    def conv_cat(self):
-        for i in self.cat_cols:
-            self.cat_col_dict[i]={k: j for j, k in enumerate(self.df_train[i].unique())}
-            self.df_train[i].replace(self.cat_col_dict[i])
-            self.df_val[i].replace(self.cat_col_dict[i])
-
-    def impute_mean(self):
-        self.mean_impute_dict={}
-        for i in self.num_cols:
-            self.mean_impute_dict[i]=self.df_train[i].mean()
-            self.impute_na(self.df_train, i, self.mean_impute_dict[i])
-            self.impute_na(self.df_val, i, self.mean_impute_dict[i])
-
-    def impute_median(self):
-        self.median_impute_dict={}
-        for i in self.num_cols:
-            self.median_impute_dict[i]=self.df_train[i].median()
-            self.impute_na(self.df_train, i, self.median_impute_dict[i])
-            self.impute_na(self.df_val, i, self.median_impute_dict[i])
-
-    def impute_na(self, df:pd.DataFrame, col:str, value):
-        df[col].fillna(value, inplace=True)
-
-    def encode_disc(self):
-        for i in self.dis_cols:
-            df[i]=pd.qcut(df[i], 4)
-
-    def ret_cat_codes(self):
-        for i in self.cat_cols:
-            self.df_train[i]=self.df_train[i].replace(self.cat_col_dict[i])
-            self.impute_na(self.df_train, i, len(self.cat_col_dict[i])+1)
-            self.df_val[i]=self.df_val[i].replace(self.cat_col_dict[i]) # dict(map(reversed, my_map.items()))
-            self.impute_na(self.df_val, i, len(self.cat_col_dict[i])+1)
-
-def proc_df(df_tr:pd.DataFrame, df_va:pd.DataFrame, cat_cols:list, num_cols:list):
-    data=Tabular(df_tr, df_va, cat_cols=cat_cols, num_cols=num_cols)
-    data.impute_mean()
-    data.conv_cat()
-    data.ret_cat_codes()
-    return data
-
-def normalize(df_train, df_val):
-    res_train, res_val= df_train.copy(), data.df_val.copy()
-    for feature_name in res_train.columns:
-        mean_train=res_train[feature_name].mean()
-        std_train=res_train[feature_name].std
-        res_train[feature_name]=(res_train[feature_name]-mean_train)/std_train
-        res_val[feature_name]=(res_val[feature_name]-mean_train)/std_train
-    return res_train, res_val
+    df_train, df_val= split_val(df.copy(), val_pct)
+    if y is None:
+        return df_train, df_val
+    else: return split_dep_col(df_train, y), split_dep_col(df_train, y)
